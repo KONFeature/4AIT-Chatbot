@@ -1,4 +1,4 @@
-package com.supinfo.chatbot.api
+package com.supinfo.chatbot.api.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
