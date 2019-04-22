@@ -3,6 +3,9 @@ package com.supinfo.chatbot.api.dto
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
+/**
+ * Class represnting a manufacturer from vpic
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Manufacturer(
 

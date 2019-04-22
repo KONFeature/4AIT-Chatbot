@@ -17,17 +17,25 @@ repositories {
 }
 
 dependencies {
+	// Kotlin
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 
+	// Spring
 	implementation 'org.springframework.shell:spring-shell-starter:2.0.1.RELEASE'
 
+	// Text IO
+	implementation 'org.beryx:text-io:3.3.0'
+
+	// Retrofit
 	implementation 'com.squareup.retrofit2:retrofit:2.5.0'
 	implementation 'com.squareup.retrofit2:converter-jackson:2.5.0'
 	implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
 
+	// Rx Java
 	implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
 
+	// H2 database
 	runtimeOnly 'com.h2database:h2'
 }
 

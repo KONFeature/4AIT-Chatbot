@@ -1,8 +1,10 @@
 package com.supinfo.chatbot.api
 
+import com.supinfo.chatbot.api.dto.Make
 import com.supinfo.chatbot.api.dto.Manufacturer
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 /**
  * Service helping us the vpic API
@@ -10,6 +12,9 @@ import retrofit2.http.GET
 interface VpicService {
 
     @GET("/api/vehicles/getallmanufacturers")
-    fun allManufecturers() : Single<VpicResponse<List<Manufacturer>>>
+    fun allManufacturers() : Single<VpicResponse<List<Manufacturer>>>
+
+    @GET("/api/vehicles/GetMakeForManufacturer/{manufacturerName}")
+    fun makeForManufacturer(@Path("manufacturerName") manufacturer: String) : Single<VpicResponse<List<Make>>>
 
 }

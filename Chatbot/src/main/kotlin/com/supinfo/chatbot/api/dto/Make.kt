@@ -9,5 +9,8 @@ data class Make (
         val id: Long,
 
         @JsonProperty("Make_Name")
-        val Make_Name: String?
+        val name: String?,
+
+        @JsonProperty("Mfr_Name")
+        val mfrName: String?
 )
