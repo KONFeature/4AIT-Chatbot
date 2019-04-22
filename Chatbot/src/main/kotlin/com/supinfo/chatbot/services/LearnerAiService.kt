@@ -13,10 +13,6 @@ import org.springframework.stereotype.Service
 @Service
 class LearnerAiService(private val vpicService: VpicService) {
 
-    companion object {
-        val log = LoggerFactory.getLogger(LearnerAiService::class.java)
-    }
-
     /**
      * TODO : Use Database to store and find keyword in the sentence, if we don't find any in the question we ask the user which one he want and them store that in the database
      */

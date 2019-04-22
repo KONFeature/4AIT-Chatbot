@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-class SpringShellCustomPrompt : PromptProvider {
+class ShellPromptProvider : PromptProvider {
 
     /**
      * Custom prompt

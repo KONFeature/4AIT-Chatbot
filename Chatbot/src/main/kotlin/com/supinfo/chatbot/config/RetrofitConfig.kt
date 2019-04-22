@@ -39,7 +39,10 @@ class RetrofitConfig {
     fun vpicService(): VpicService {
         val logger = LoggerFactory.getLogger(VpicService::class.java)
         val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .callTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor { chain ->
                     // We need to add format = json at the end of the request
                     val url = chain.request().url().newBuilder().addQueryParameter("format", "json").build()
