@@ -19,7 +19,15 @@ repositories {
 dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
 	implementation 'org.springframework.shell:spring-shell-starter:2.0.1.RELEASE'
+
+	implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+	implementation 'com.squareup.retrofit2:converter-jackson:2.5.0'
+	implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+
+	implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+
 	runtimeOnly 'com.h2database:h2'
 }
 
