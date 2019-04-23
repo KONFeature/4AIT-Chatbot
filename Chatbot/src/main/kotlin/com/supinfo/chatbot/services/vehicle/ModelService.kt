@@ -1,9 +1,9 @@
 package com.supinfo.chatbot.services.vehicle
 
-import com.supinfo.chatbot.api.VpicService
-import com.supinfo.chatbot.api.dto.Make
-import com.supinfo.chatbot.api.dto.Model
-import com.supinfo.chatbot.api.dto.VehicleType
+import com.supinfo.chatbot.data.api.VpicService
+import com.supinfo.chatbot.data.api.dto.Make
+import com.supinfo.chatbot.data.api.dto.Model
+import com.supinfo.chatbot.data.api.dto.VehicleType
 import org.beryx.textio.TextIO
 import org.springframework.stereotype.Service
 
@@ -20,11 +20,11 @@ class ModelService(private val vpicService: VpicService) {
         var model: Model? = null
         while (model == null) {
             // Load and display makes list
-            textIO.textTerminal.println("Loading the available models for the make ${make.name}, this can take sometime ...")
+            textIO.textTerminal.println("Loading the available entities for the make ${make.name}, this can take sometime ...")
             val modelsResponse = vpicService.modelsForMake(make.id).blockingGet()
             if (modelsResponse.count <= 0) {
                 modelsResponse.message?.let { textIO.textTerminal.println(it) }
-                textIO.textTerminal.println("Error during the models fetching, refreshing")
+                textIO.textTerminal.println("Error during the entities fetching, refreshing")
             } else {
                 textIO.textTerminal.println("Model, column : (ID : Name)")
                 modelsResponse.results?.forEach {
@@ -50,11 +50,11 @@ class ModelService(private val vpicService: VpicService) {
         var model: Model? = null
         while (model == null) {
             // Load and display makes list
-            textIO.textTerminal.println("Loading the available models for the make ${make.name} and type ${vType.name}, this can take sometime ...")
+            textIO.textTerminal.println("Loading the available entities for the make ${make.name} and type ${vType.name}, this can take sometime ...")
             val modelsResponse = vpicService.modelsForMakeAndType(make.id, vType.name?:run { "" }).blockingGet()
             if (modelsResponse.count <= 0) {
                 modelsResponse.message?.let { textIO.textTerminal.println(it) }
-                textIO.textTerminal.println("Error during the models fetching, refreshing")
+                textIO.textTerminal.println("Error during the entities fetching, refreshing")
             } else {
                 textIO.textTerminal.println("Model, column : (ID : Name)")
                 modelsResponse.results?.forEach {

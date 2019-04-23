@@ -1,6 +1,6 @@
 package com.supinfo.chatbot.config
 
-import com.supinfo.chatbot.api.VpicService
+import com.supinfo.chatbot.data.api.VpicService
 import org.springframework.context.annotation.Configuration
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit

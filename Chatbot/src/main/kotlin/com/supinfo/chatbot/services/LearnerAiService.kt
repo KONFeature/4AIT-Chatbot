@@ -1,10 +1,9 @@
 package com.supinfo.chatbot.services
 
-import com.supinfo.chatbot.api.VpicService
+import com.supinfo.chatbot.data.api.VpicService
 import io.reactivex.schedulers.Schedulers
 import org.beryx.textio.TextIO
 import org.beryx.textio.TextIoFactory
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 /**

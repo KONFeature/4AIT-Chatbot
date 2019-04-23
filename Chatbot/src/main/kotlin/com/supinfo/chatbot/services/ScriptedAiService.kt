@@ -1,9 +1,7 @@
 package com.supinfo.chatbot.services
 
-import com.supinfo.chatbot.api.VpicService
-import com.supinfo.chatbot.api.dto.Make
-import com.supinfo.chatbot.api.dto.Manufacturer
-import com.supinfo.chatbot.api.dto.Model
+import com.supinfo.chatbot.data.api.dto.Make
+import com.supinfo.chatbot.data.api.dto.Model
 import com.supinfo.chatbot.services.vehicle.MakeService
 import com.supinfo.chatbot.services.vehicle.ManufacturerService
 import com.supinfo.chatbot.services.vehicle.ModelService

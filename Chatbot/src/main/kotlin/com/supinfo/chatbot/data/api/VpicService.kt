@@ -1,6 +1,6 @@
-package com.supinfo.chatbot.api
+package com.supinfo.chatbot.data.api
 
-import com.supinfo.chatbot.api.dto.*
+import com.supinfo.chatbot.data.api.dto.*
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

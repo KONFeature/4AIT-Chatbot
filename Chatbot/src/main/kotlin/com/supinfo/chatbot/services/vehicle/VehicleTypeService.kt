@@ -1,8 +1,8 @@
 package com.supinfo.chatbot.services.vehicle
 
-import com.supinfo.chatbot.api.VpicService
-import com.supinfo.chatbot.api.dto.Make
-import com.supinfo.chatbot.api.dto.VehicleType
+import com.supinfo.chatbot.data.api.VpicService
+import com.supinfo.chatbot.data.api.dto.Make
+import com.supinfo.chatbot.data.api.dto.VehicleType
 import org.beryx.textio.TextIO
 import org.springframework.stereotype.Service
 
@@ -23,7 +23,7 @@ class VehicleTypeService(private val vpicService: VpicService) {
             val modelsResponse = vpicService.vehicleTypeForMake(make.id).blockingGet()
             if (modelsResponse.count <= 0) {
                 modelsResponse.message?.let { textIO.textTerminal.println(it) }
-                textIO.textTerminal.println("Error during the models fetching, refreshing")
+                textIO.textTerminal.println("Error during the entities fetching, refreshing")
             } else {
                 textIO.textTerminal.println("Model, column : (ID : Name)")
                 modelsResponse.results?.forEach {

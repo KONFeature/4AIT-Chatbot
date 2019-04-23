@@ -1,7 +1,7 @@
 package com.supinfo.chatbot.services.vehicle
 
-import com.supinfo.chatbot.api.VpicService
-import com.supinfo.chatbot.api.dto.Manufacturer
+import com.supinfo.chatbot.data.api.VpicService
+import com.supinfo.chatbot.data.api.dto.Manufacturer
 import org.beryx.textio.TextIO
 import org.springframework.stereotype.Service
 
