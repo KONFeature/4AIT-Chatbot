@@ -1,9 +1,11 @@
 package com.supinfo.chatbot.services.vehicle
 
+import com.supinfo.chatbot.Utils.TerminalAction
 import com.supinfo.chatbot.data.api.VpicService
 import com.supinfo.chatbot.data.api.dto.Make
 import com.supinfo.chatbot.data.api.dto.Model
 import com.supinfo.chatbot.data.api.dto.VehicleType
+import com.supinfo.chatbot.services.TextIoService
 import org.beryx.textio.TextIO
 import org.springframework.stereotype.Service
 
@@ -11,65 +13,50 @@ import org.springframework.stereotype.Service
  * Service handeling all the vehicule model logic
  */
 @Service
-class ModelService(private val vpicService: VpicService) {
+class ModelService(private val textIoService: TextIoService,
+                   private val vpicService: VpicService) {
 
     /**
      * Pick a model from terminal from make
      */
-    fun pickModel(textIO: TextIO, make: Make) : Model? {
-        var model: Model? = null
-        while (model == null) {
-            // Load and display makes list
-            textIO.textTerminal.println("Loading the available entities for the make ${make.name}, this can take sometime ...")
-            val modelsResponse = vpicService.modelsForMake(make.id).blockingGet()
-            if (modelsResponse.count <= 0) {
-                modelsResponse.message?.let { textIO.textTerminal.println(it) }
-                textIO.textTerminal.println("Error during the entities fetching, refreshing")
-            } else {
-                textIO.textTerminal.println("Model, column : (ID : Name)")
-                modelsResponse.results?.forEach {
-                    textIO.textTerminal.println("${it.id} : ${it.modelName}")
-                }
-            }
-
-            // Pick a model
-            val modelId = textIO.newLongInputReader()
-                    .withMinVal(-1)
-                    .read("Please enter the desired model id, or -1 to abort")
-            if(modelId == -1L) return null
-            model = modelsResponse.results?.firstOrNull { it.id == modelId }
-            if(model == null) textIO.textTerminal.println("Null model selected, refreshing")
+    fun pickModel(make: Make): Model? {
+        // Load and display makes list
+        textIoService.displayChatbotMessage("Chargement des model disponnible pour la marque ${make.name}, ca peut prendre un peut de temp...")
+        val modelsResponse = vpicService.modelsForMake(make.id).blockingGet()
+        if (modelsResponse.count <= 0) {
+            modelsResponse.message?.let { textIoService.displayChatbotMessage(it) }
+            textIoService.displayChatbotMessage("Impossible de trouver des models pour la marque ${make.name}, abandon")
+            return null
         }
-        return model
+
+        // Pick a model
+        val response = textIoService.selectItemFromList(modelsResponse.results ?: ArrayList(), false, false)
+        return if (response.action == TerminalAction.DONE) {
+            response.result as Model
+        } else {
+            return null
+        }
     }
 
     /**
      * Pick a model from terminal from make and vehicule type
      */
-    fun pickModel(textIO: TextIO, make: Make, vType: VehicleType) : Model? {
-        var model: Model? = null
-        while (model == null) {
-            // Load and display makes list
-            textIO.textTerminal.println("Loading the available entities for the make ${make.name} and type ${vType.name}, this can take sometime ...")
-            val modelsResponse = vpicService.modelsForMakeAndType(make.id, vType.name?:run { "" }).blockingGet()
-            if (modelsResponse.count <= 0) {
-                modelsResponse.message?.let { textIO.textTerminal.println(it) }
-                textIO.textTerminal.println("Error during the entities fetching, refreshing")
-            } else {
-                textIO.textTerminal.println("Model, column : (ID : Name)")
-                modelsResponse.results?.forEach {
-                    textIO.textTerminal.println("${it.id} : ${it.modelName}")
-                }
-            }
-
-            // Pick a model
-            val modelId = textIO.newLongInputReader()
-                    .withMinVal(-1)
-                    .read("Please enter the desired model id, or -1 to abort")
-            if(modelId == -1L) return null
-            model = modelsResponse.results?.firstOrNull { it.id == modelId }
-            if(model == null) textIO.textTerminal.println("Null model selected, refreshing")
+    fun pickModel(make: Make, vType: VehicleType): Model? {
+        // Load and display makes list
+        textIoService.displayChatbotMessage("Chargement des model disponnible pour la marque ${make.name} du type ${vType.name}, ca peut prendre un peut de temp...")
+        val modelsResponse = vpicService.modelsForMakeAndType(make.id, vType.name ?: run { "" }).blockingGet()
+        if (modelsResponse.count <= 0) {
+            modelsResponse.message?.let { textIoService.displayChatbotMessage(it) }
+            textIoService.displayChatbotMessage("Impossible de trouver des models pour la marque ${make.name} de type ${vType.name}, abandon")
+            return null
         }
-        return model
+
+        // Pick a model
+        val response = textIoService.selectItemFromList(modelsResponse.results ?: ArrayList(), false, false)
+        return if (response.action == TerminalAction.DONE) {
+            response.result as Model
+        } else {
+            return null
+        }
     }
 }

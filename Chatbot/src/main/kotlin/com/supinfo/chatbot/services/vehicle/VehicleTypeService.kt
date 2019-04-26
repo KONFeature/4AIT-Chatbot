@@ -1,45 +1,40 @@
 package com.supinfo.chatbot.services.vehicle
 
+import com.supinfo.chatbot.Utils.TerminalAction
 import com.supinfo.chatbot.data.api.VpicService
 import com.supinfo.chatbot.data.api.dto.Make
+import com.supinfo.chatbot.data.api.dto.Model
 import com.supinfo.chatbot.data.api.dto.VehicleType
-import org.beryx.textio.TextIO
+import com.supinfo.chatbot.services.TextIoService
 import org.springframework.stereotype.Service
 
 /**
  * Service handeling all the vehicule type logic
  */
 @Service
-class VehicleTypeService(private val vpicService: VpicService) {
+class VehicleTypeService(private val textIoService: TextIoService,
+                         private val vpicService: VpicService) {
 
     /**
      * Pick a vehicle type from terminal with knwon make
      */
-    fun pickVehicleType(textIO: TextIO, make: Make) : VehicleType? {
-        var vType: VehicleType? = null
-        while (vType == null) {
-            // Load and display type list
-            textIO.textTerminal.println("Loading the available types for the make ${make.name}, this can take sometime ...")
-            val modelsResponse = vpicService.vehicleTypeForMake(make.id).blockingGet()
-            if (modelsResponse.count <= 0) {
-                modelsResponse.message?.let { textIO.textTerminal.println(it) }
-                textIO.textTerminal.println("Error during the entities fetching, refreshing")
-            } else {
-                textIO.textTerminal.println("Model, column : (ID : Name)")
-                modelsResponse.results?.forEach {
-                    textIO.textTerminal.println("${it.id} : ${it.name}")
-                }
-            }
-
-            // Pick a type
-            val vTypeId = textIO.newLongInputReader()
-                    .withMinVal(-1)
-                    .read("Please enter the desired type id, or -1 to abort")
-            if(vTypeId == -1L) return null
-            vType = modelsResponse.results?.firstOrNull { it.id == vTypeId }
-            if(vType == null) textIO.textTerminal.println("Null type selected, refreshing")
+    fun pickVehicleType(make: Make): VehicleType? {
+        // Load and display type list
+        textIoService.displayChatbotMessage("Chargement des types disponnible pour la marque ${make.name}, ca peut prendre un peut de temp...")
+        val typesResponse = vpicService.vehicleTypeForMake(make.id).blockingGet()
+        if (typesResponse.count <= 0) {
+            typesResponse.message?.let { textIoService.displayChatbotMessage(it) }
+            textIoService.displayChatbotMessage("Impossible de trouver des type pour la marque ${make.name}, abandon")
+            return null
         }
-        return vType
+
+        // Pick a type
+        val response = textIoService.selectItemFromList(typesResponse.results ?: ArrayList(), false, false)
+        return if (response.action == TerminalAction.DONE) {
+            response.result as VehicleType
+        } else {
+            return null
+        }
     }
 
 }

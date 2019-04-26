@@ -25,7 +25,7 @@ class ScriptedAiService(private val textIoService: TextIoService,
 
         // Launch the script to get a specific vehicle model from scratch
         val directSelectMake = textIoService.
-                askUserBoolQuestion("Do you want to directly select a make ? Else you will be able to select a manufacturer and then a make associated to this manufacturer", true)
+                askUserBoolQuestion("Voulez vous selectionner une marque directement ? Sinon vous pourrez selectionner un constructeur, puis une marque associé", true)
 
         val make: Make = if (directSelectMake) {
             makeService.pickMake()
@@ -34,35 +34,35 @@ class ScriptedAiService(private val textIoService: TextIoService,
             manufacturerService.pickManufacturer()
                     ?.let { makeService.pickMake(it) }
                     ?: run {
-                        textIoService.displayChatbotMessage("No manufacturer selected, aborting")
+                        textIoService.displayChatbotMessage("Aucun constructeur selectionnez, abandon")
                         textIoService.stop()
                         return
                     }
         } ?: run {
-            textIoService.displayChatbotMessage("No make selected aborting")
+            textIoService.displayChatbotMessage("Aucune marque selectionnez, abandon")
             textIoService.stop()
             return
         }
-//
-//        val directSelectModel = terminal.newBooleanInputReader()
-//                .withDefaultValue(true)
-//                .read("Do you Want to directly select a model ? Else you will be able to select a vehicle type and then a model associated to this type and make")
-//        val model: Model = if (directSelectModel) {
-//            modelService.pickModel(terminal, make)
-//        } else {
-//            // Select a type
-//            vehiculeTypeService.pickVehicleType(terminal, make)
-//                    ?.let { modelService.pickModel(terminal, make, it) }
-//                    ?: run {
-//                        terminal.textTerminal.println("No vehicule type selected, aborting")
-//                        return
-//                    }
-//        } ?: run {
-//            terminal.textTerminal.println("No model selected aborting")
-//            return
-//        }
-//
-//        terminal.textTerminal.println("Model selected : ${model.modelName} from ${model.makeName}")
+
+        val directSelectModel = textIoService.askUserBoolQuestion("Voulez vous selectionner directement un model ? Sinn vous pourrez selectionner un type de vehicule puis un model associer.", true)
+        val model: Model = if (directSelectModel) {
+            modelService.pickModel(make)
+        } else {
+            // Select a type
+            vehiculeTypeService.pickVehicleType(make)
+                    ?.let { modelService.pickModel(make, it) }
+                    ?: run {
+                        textIoService.displayChatbotMessage("Vous n'avez selectionnez aucun type, abandon")
+                        textIoService.stop()
+                        return
+                    }
+        } ?: run {
+            textIoService.displayChatbotMessage("Vous n'avez selectionnez aucun model, abandon")
+            textIoService.stop()
+            return
+        }
+
+        textIoService.displayChatbotMessage("Vous avez selectionnez le model ${model.getTerminalString()}")
         textIoService.stop()
     }
 }

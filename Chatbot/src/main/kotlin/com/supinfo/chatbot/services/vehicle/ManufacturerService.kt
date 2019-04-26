@@ -1,5 +1,6 @@
 package com.supinfo.chatbot.services.vehicle
 
+import com.supinfo.chatbot.Utils.TerminalAction
 import com.supinfo.chatbot.data.api.VpicService
 import com.supinfo.chatbot.data.api.dto.Manufacturer
 import com.supinfo.chatbot.services.TextIoService
@@ -20,34 +21,25 @@ class ManufacturerService(private val textIoService: TextIoService,
         var manufacturer: Manufacturer? = null
         var currentPage: Long = 1
         while (manufacturer == null) {
-            textIoService.displayChatbotMessage(("Manufacturer of page $currentPage"))
+            textIoService.displayChatbotMessage(("Constructeur de la page $currentPage"))
 
             // Load and display manufacturers list
-            textIoService.displayChatbotMessage("Loading the available manufacturers, this can take sometime ...")
+            textIoService.displayChatbotMessage("Chargement des constructeurs disponnible, ca peut prendre un peut de temp...")
             val manufacturersResonse = vpicService.allManufacturersPerPage(currentPage).blockingGet()
             if (manufacturersResonse.count <= 0) {
                 manufacturersResonse.message?.let { textIoService.displayChatbotMessage(it) }
-                textIoService.displayChatbotMessage("Try on another page")
-            } else {
-                textIoService.displayMessage("Manufacturer, column : (ID : Name : Common Name)")
-                manufacturersResonse.results?.forEach {
-                    textIoService.displayMessage("${it.id} : ${it.name} ! ${it.commonName}")
-                }
+                textIoService.displayChatbotMessage("Essayez une autre page")
             }
 
-            // Pick a manufacturer or another page
-            val answer = textIoService.askUserQuestion("Please enter the desired manufacturer id, prev for previous page or next for next page, exit to abort, ", TextIoService.PATTERN_NUMBER_NAV_OR_EXIT)
-
-            if(answer.trim() == "prev" && currentPage <= 1) {
-                textIoService.displayChatbotMessage("You are on first page, can't go behind, refreshing")
-            } else {
-                when(answer.trim()) {
-                    "exit" -> return null
-                    "next" -> currentPage++
-                    "prev" -> currentPage--
-                    else -> {
-                        manufacturer = manufacturersResonse.results?.firstOrNull { it.id == answer.toLongOrNull() }
-                        if(manufacturer == null) textIoService.displayChatbotMessage("Null manufacturer selected, refreshing")
+            // Ask the user a question and check the result
+            val response = textIoService.selectItemFromList(manufacturersResonse.results?:ArrayList(), currentPage > 1, true)
+            when(response.action) {
+                TerminalAction.EXIT -> return null
+                TerminalAction.PREV -> currentPage--
+                TerminalAction.NEXT -> currentPage++
+                else -> response.result?.let { it ->
+                    if(it is Manufacturer) {
+                        manufacturer = it
                     }
                 }
             }
