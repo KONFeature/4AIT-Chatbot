@@ -2,14 +2,18 @@ package com.supinfo.chatbot.services
 
 import com.supinfo.chatbot.Utils.TerminalItem
 import com.supinfo.chatbot.Utils.TerminalResponse
+import com.supinfo.chatbot.data.db.entities.KeywordTarget
 import org.beryx.textio.TextIO
 import org.beryx.textio.TextIoFactory
 import org.springframework.stereotype.Service
+import kotlin.reflect.jvm.internal.impl.load.java.structure.JavaClass
 
 @Service
 class TextIoService {
 
     companion object {
+        const val PATTERN_NUMBER = "[0-9]+"
+        const val PATTERN_NUMBER_SEPERATED = "([0-9]+;?)+"
         const val PATTERN_NUMBER_OR_EXIT = "[0-9]+|(?i)(exit)"
         const val PATTERN_NUMBER_NAV_OR_EXIT = "[0-9]+|(?i)(exit)|(?i)(prev)|(?i)(next)"
 
@@ -77,6 +81,13 @@ class TextIoService {
                 withFalseInput("N")?.
                 withInputTrimming(true)?.
                 read("vous") ?: false
+    }
+
+    /**
+     * function use to let the user pick an enum value
+     */
+    fun askUserTarget(): KeywordTarget? {
+        return textIo?.newEnumInputReader(KeywordTarget::class.java)?.read("vous")
     }
 
     /**

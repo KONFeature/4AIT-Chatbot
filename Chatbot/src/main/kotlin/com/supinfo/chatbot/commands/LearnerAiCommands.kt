@@ -7,7 +7,7 @@ import org.springframework.shell.standard.ShellMethod
 @ShellComponent
 class LearnerAiCommands(private val learnerAiService: LearnerAiService) {
 
-    @ShellMethod("Launch the leaner AI", key = ["learner-ai", "learner", "start", "launch"])
+    @ShellMethod("Lancement de la version apprenante de l'IA", key = ["learner-ai", "learner", "lstart", "llaunch"])
     fun start() {
         learnerAiService.launch()
     }

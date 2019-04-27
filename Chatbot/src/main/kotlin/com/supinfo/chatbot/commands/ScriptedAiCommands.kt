@@ -10,7 +10,7 @@ import org.springframework.shell.standard.ShellMethod
 class ScriptedAiCommands(private val scriptedAiService: ScriptedAiService) {
 
 
-    @ShellMethod("Launch the scripted AI", key = ["scripted-ai", "scripted", "start-scripted", "launch-scripted", "slaunch"])
+    @ShellMethod("Lancement de la version scripter de l'IA", key = ["scripted-ai", "scripted", "slaunch", "sstart"])
     fun start() {
         scriptedAiService.launch()
     }
