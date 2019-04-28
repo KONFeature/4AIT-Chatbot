@@ -26,6 +26,9 @@ interface VpicService {
     @GET("/api/vehicles/GetVehicleTypesForMakeId/{makeId}")
     fun vehicleTypeForMake(@Path("makeId") makeId: Long) : Single<VpicResponse<List<VehicleType>>>
 
+    @GET("/api/vehicles/GetModelsForMake/{make}")
+    fun modelsForMake(@Path("make") make: String) : Single<VpicResponse<List<Model>>>
+
     @GET("/api/vehicles/GetModelsForMakeId/{makeId}")
     fun modelsForMake(@Path("makeId") makeId: Long) : Single<VpicResponse<List<Model>>>
 

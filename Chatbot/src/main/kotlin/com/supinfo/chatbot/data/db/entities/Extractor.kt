@@ -24,7 +24,10 @@ data class Extractor (
 
         @Column
         var score: Long = 0
-) : TerminalItem {
+) : TerminalItem, Comparable<Extractor> {
+        // Sort the extractor by score in a list
+        override fun compareTo(other: Extractor) = score.compareTo(other.score)
+
         override fun getTerminalString() = "Pour le mot clé ${keyword.word} on selectionne des données ${keyword.target} qui corresponde a ${selector?.getTerminalString() ?:"toute"}, avec une priorité de $score"
 
         override fun equalsTerminalInput(input: String, strict: Boolean): Boolean {
